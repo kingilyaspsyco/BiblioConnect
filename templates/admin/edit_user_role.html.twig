@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le rôle{% endblock %}
+
+{% block body %}
+    <div style="max-width: 600px; margin: auto; padding: 20px; background: #f9f9f9; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1 style="text-align: center; color: #333;">
+            🛠️ Modifier le rôle de <span style="color: #007bff;">{{ user.email }}</span>
+        </h1>
+
+        {{ form_start(form) }}
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="roles" style="font-weight: bold;">🎓 Rôle</label>
+                {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3" style="width: 100%;">✅ Mettre à jour</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('admin_users') }}" class="btn btn-secondary mt-4" style="width: 100%;">⬅️ Retour à la liste des utilisateurs</a>
+    </div>
+{% endblock %}

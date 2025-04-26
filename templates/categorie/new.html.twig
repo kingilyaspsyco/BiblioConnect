@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Catégorie 📂{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-success">➕ Nouvelle Catégorie</h1>
+
+        <div class="card shadow-sm p-4">
+            {{ form_start(form) }}
+                <div class="form-group mb-3">
+                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <button type="submit" class="btn btn-info mt-3">Créer</button>
+            {{ form_end(form) }}
+        </div>
+
+        <a href="{{ path('app_categories') }}" class="btn btn-outline-secondary mt-4">⬅️ Retour à la liste</a>
+    </div>
+{% endblock %}

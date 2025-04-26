@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Auteur 🖋️{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-success">➕ Ajouter un Auteur</h1>
+
+        <div class="card shadow-sm p-4">
+            {{ form_start(form) }}
+                <div class="form-group mb-3">
+                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">✅ Créer</button>
+            {{ form_end(form) }}
+        </div>
+
+        <a href="{{ path('app_auteurs') }}" class="btn btn-secondary mt-3">⬅️ Retour à la liste</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Langues 🌍{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 style="color:rgb(28, 79, 135);">🌍 Liste des Langues</h1>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <input type="text" id="search" placeholder="🔍 Rechercher une langue..." class="form-control w-50" />
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_langues_new') }}" class="btn btn-success ms-3">➕ Ajouter une langue</a>
+            {% endif %}
+        </div>
+
+        <div id="langues-list">
+            {% include 'langue/_langues_list.html.twig' with { langues: langues } %}
+        </div>
+
+        <a href="{{ path('app_home') }}" class="btn btn-outline-secondary mt-4">⬅️ Retour à l'accueil</a>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search');
+        const languesList = document.getElementById('langues-list');
+
+        searchInput.addEventListener('input', function () {
+            fetch('{{ path('app_langues_search') }}?q=' + encodeURIComponent(this.value))
+                .then(response => response.text())
+                .then(html => {
+                    languesList.innerHTML = html;
+                });
+        });
+    </script>
+{% endblock %}

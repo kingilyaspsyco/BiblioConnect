@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Auteurs ✍️{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 style="color:rgb(28, 79, 135);">✍️ Liste des Auteurs</h1>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <input type="text" id="search" placeholder="🔍 Rechercher un auteur..." class="form-control w-50" />
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_auteurs_new') }}" class="btn btn-success ms-3">➕ Ajouter un auteur</a>
+            {% endif %}
+        </div>
+
+        <div id="auteurs-list">
+            {% include 'auteur/_auteurs_list.html.twig' with { auteurs: auteurs } %}
+        </div>
+
+        <a href="{{ path('app_home') }}" class="btn btn-outline-secondary mt-4">⬅️ Retour à l'accueil</a>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search');
+        const auteursList = document.getElementById('auteurs-list');
+
+        searchInput.addEventListener('input', function () {
+            fetch('{{ path('app_auteur_search') }}?q=' + encodeURIComponent(this.value))
+                .then(response => response.text())
+                .then(html => {
+                    auteursList.innerHTML = html;
+                });
+        });
+    </script>
+{% endblock %}

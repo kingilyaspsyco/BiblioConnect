@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires - {{ livre.titre }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .moyenne-stars {
+            font-size: 1.5rem;
+            color: #ffc107;
+        }
+        .star-rating {
+            font-size: 1.2rem;
+            color: #ffc107;
+        }
+        .card-comment {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card-comment:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">💬 Commentaires sur "{{ livre.titre }}"</h1>
+
+    {% if commentaires|length > 0 %}
+        <div class="text-center mb-4">
+            {% if moyenne is not null %}
+                <div class="moyenne-stars">
+                    ⭐ Moyenne : {{ moyenne }}/5
+                </div>
+            {% endif %}
+            <p class="text-muted">{{ commentaires|length }} commentaire(s)</p>
+        </div>
+
+        <div class="row">
+            {% for commentaire in commentaires %}
+                <div class="col-md-6">
+                    <div class="card mb-3 card-comment">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ commentaire.user.firstname }}</h5>
+                            <p class="card-text">{{ commentaire.contenu }}</p>
+                            <div class="star-rating">
+                                {% for i in 1..5 %}
+                                    {% if i <= commentaire.note %}
+                                        ⭐
+                                    {% else %}
+                                        ☆
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-muted">({{ commentaire.note }}/5)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            Aucun commentaire pour ce livre.
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_livre') }}" class="btn btn-secondary">⬅️ Retour à la liste des livres</a>
+    </div>
+{% endblock %}

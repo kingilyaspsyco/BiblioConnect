@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commenter le livre{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">📝 Commenter "{{ livre.titre }}"</h1>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.contenu) }}
+                {{ form_widget(form.contenu, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.note) }}
+                {{ form_widget(form.note, {'attr': {'class': 'form-control', 'min': 1, 'max': 5}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">💬 Envoyer</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_profile') }}" class="btn btn-secondary mt-3">⬅️ Retour à mes réservations</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container text-center mt-5">
+        {% if app.user %}
+            <h1 class="mb-4">Bienvenue {{ app.user.firstname }} 👋</h1>
+            <p class="mb-5">Choisis une action :</p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-4">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_dashboard') }}" class="btn btn-lg btn-outline-primary rounded-pill shadow px-5 py-3">📊 Dashboard Admin</a>
+                    <a href="{{ path('admin_users') }}" class="btn btn-lg btn-outline-dark rounded-pill shadow px-5 py-3">👥 Gérer les Utilisateurs</a>
+                    <a href="{{ path('app_livre') }}" class="btn btn-lg btn-outline-success rounded-pill shadow px-5 py-3">📚 Gérer les Livres</a>
+                    <a href="{{ path('app_auteurs') }}" class="btn btn-lg btn-outline-warning rounded-pill shadow px-5 py-3">✍️ Gérer les Auteurs</a>
+                    <a href="{{ path('app_langues') }}" class="btn btn-lg btn-outline-info rounded-pill shadow px-5 py-3">🌍 Gérer les Langues</a>
+                    <a href="{{ path('app_categories') }}" class="btn btn-lg btn-outline-secondary rounded-pill shadow px-5 py-3">🗂️ Gérer les Catégories</a>
+
+                {% elseif is_granted('ROLE_LIBRARIAN') %}
+                    <a href="{{ path('librarian_dashboard') }}" class="btn btn-lg btn-outline-primary rounded-pill shadow px-5 py-3">📊 Dashboard Bibliothécaire</a>
+                    <a href="{{ path('app_livre') }}" class="btn btn-lg btn-outline-success rounded-pill shadow px-5 py-3">📚 Gérer les Livres</a>
+                    <a href="{{ path('app_auteurs') }}" class="btn btn-lg btn-outline-warning rounded-pill shadow px-5 py-3">✍️ Gérer les Auteurs</a>
+                    <a href="{{ path('app_langues') }}" class="btn btn-lg btn-outline-info rounded-pill shadow px-5 py-3">🌍 Gérer les Langues</a>
+                    <a href="{{ path('app_categories') }}" class="btn btn-lg btn-outline-secondary rounded-pill shadow px-5 py-3">🗂️ Gérer les Catégories</a>
+
+                {% else %}
+                    <a href="{{ path('app_profile') }}" class="btn btn-lg btn-outline-primary rounded-pill shadow px-5 py-3">📋 Mes Réservations</a>
+                    <a href="{{ path('app_livre') }}" class="btn btn-lg btn-outline-success rounded-pill shadow px-5 py-3">📚 Explorer les Livres</a>
+                {% endif %}
+            </div>
+
+        {% else %}
+            <h1 class="mb-4">Bienvenue invité !</h1>
+            <p class="mb-3">Connecte-toi pour accéder aux fonctionnalités.</p>
+            <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">🔐 Connexion</a>
+        {% endif %}
+    </div>
+{% endblock %}

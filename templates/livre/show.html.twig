@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ livre.titre }}{% endblock %}
+
+{% block body %}
+    <h1>{{ livre.titre }}</h1>
+
+    {% if livre.imageCouverture %}
+        <img src="{{ livre.imageCouverture }}" alt="Image couverture" style="width: 300px; height: auto; border-radius: 10px; margin-bottom: 20px;">
+    {% endif %}
+
+    <ul>
+        <li><strong>Auteur :</strong> {{ livre.auteur ? livre.auteur.prenom ~ ' ' ~ livre.auteur.nom : 'N/A' }}</li>
+        <li><strong>Catégorie :</strong> {{ livre.categorie ? livre.categorie.nom : 'N/A' }}</li>
+        <li><strong>Langue :</strong> {{ livre.langue ? livre.langue.nom : 'N/A' }}</li>
+        <li><strong>Description :</strong> {{ livre.description }}</li>
+        <li><strong>ISBN :</strong> {{ livre.isbn }}</li>
+        <li><strong>Nombre de Pages :</strong> {{ livre.nombrePages }}</li>
+        <li><strong>Année de Publication :</strong> {{ livre.anneePublication }}</li>
+        <li><strong>Ajouté le :</strong> {{ livre.dateajout|date('d/m/Y') }}</li>
+    </ul>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('app_reservation_create', { 'livreId': livre.id }) }}" class="btn btn-primary">Réserver</a>
+    {% endif %}
+
+    <hr>
+
+    <h3>Commentaires :</h3>
+    {% for commentaire in commentaires %}
+        <div class="mb-3 p-2 border rounded">
+            <strong>{{ commentaire.user.firstname }}</strong> -
+            <small>{{ commentaire.createdAt|date('d/m/Y H:i') }}</small><br>
+            ⭐ Note : {{ commentaire.note }}/5
+            <p>{{ commentaire.contenu }}</p>
+        </div>
+    {% else %}
+        <p>Aucun commentaire pour ce livre.</p>
+    {% endfor %}
+
+    <h4>Ajouter un commentaire :</h4>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary mt-2">Envoyer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_livre') }}" class="btn btn-secondary mt-3">⬅️ Retour aux livres</a>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Livres 📚{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 style="color:rgb(28, 79, 135);">📚 Liste des Livres</h1>
+
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+            <a href="{{ path('app_livre_new') }}" class="btn btn-success">
+                ➕ Ajouter un livre
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="input-group mb-4" style="max-width: 400px;">
+        <span class="input-group-text">🔍</span>
+        <input type="text" id="search" placeholder="Rechercher un livre..." class="form-control" />
+    </div>
+
+    <div id="livres-list">
+        {% include 'livre/_livres_list.html.twig' with { livresAvecNotes: livresAvecNotes } %}
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search');
+        const livresList = document.getElementById('livres-list');
+
+        searchInput.addEventListener('input', function () {
+            fetch('{{ path('app_livre_search') }}?q=' + encodeURIComponent(this.value))
+                .then(response => response.text())
+                .then(html => {
+                    livresList.innerHTML = html;
+                });
+        });
+    </script>
+
+    <div class="mt-3">
+        <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">⬅️ Retour à l'accueil</a>
+    </div>
+{% endblock %}

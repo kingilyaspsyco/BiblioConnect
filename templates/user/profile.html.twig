@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📖 Mes Réservations{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-reservation {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
+        }
+        .card-reservation:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+        .badge-status {
+            font-size: 0.85rem;
+            padding: 0.4em 0.75em;
+            border-radius: 8px;
+        }
+        .btn-custom {
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1 class="my-4 text-center">📚 Mes Réservations</h1>
+
+    {% if reservations|length > 0 %}
+        <div class="row">
+            {% for reservation in reservations %}
+                {% set livre = reservation.livre %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm card-reservation">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ livre.titre }}</h5>
+                            <p class="card-text">
+                                <strong>📅 Réservé le :</strong> {{ reservation.datereservation|date('d/m/Y') }}<br>
+                                <strong>📌 Statut :</strong>
+                                {% if reservation.statut == 'en_attente' %}
+                                    <span class="badge bg-warning text-dark badge-status">⏳ En attente</span>
+                                {% elseif reservation.statut == 'confirmee' %}
+                                    <span class="badge bg-success badge-status">✅ Confirmée</span>
+                                {% endif %}
+                            </p>
+
+                            {% if reservation.statut == 'confirmee' %}
+                                <a href="{{ path('app_commentaire_new', { 'livreId': livre.id }) }}" class="btn btn-primary btn-sm btn-custom">
+                                    ✍️ Commenter & Noter
+                                </a>
+                                <a href="{{ path('app_reservation_return', {'id': reservation.id}) }}" class="btn btn-danger btn-sm btn-custom">
+                                    🔄 Retourner le livre
+                                </a>
+                            {% else %}
+                                <span class="text-muted">🔒 En attente de validation</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            😕 Vous n'avez réservé aucun livre.
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_livre') }}" class="btn btn-secondary">⬅️ Retour à la liste des livres</a>
+    </div>
+{% endblock %}

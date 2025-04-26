@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ form.vars.value.id ? 'Modifier le Livre' : 'Nouveau Livre' }} 📚{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">{{ form.vars.value.id ? '✏️ Modifier le Livre' : '➕ Nouveau Livre' }}</h2>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="row g-3">
+                        {% for field in form %}
+                            {% if field.vars.name != 'disponible' %}
+                                <div class="col-md-6">
+                                    {{ form_row(field, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            {% else %}
+                                <div style="display: none;">
+                                    {{ form_row(field) }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-success mt-4 px-5">
+                            {{ form.vars.value.id ? '💾 Enregistrer' : 'Ajouter' }}
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ path('app_livre') }}" class="btn btn-outline-secondary">⬅️ Retour à la liste des livres</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,53 @@
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for item in livresAvecNotes %}
+        <div style="border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #f9f9f9; width: 250px;">
+            {% if item.livre.imageCouverture %}
+                <img src="{{ asset('uploads/covers/' ~ item.livre.imageCouverture) }}" alt="Couverture du livre" style="width: 100%; height: auto; border-radius: 5px; margin-bottom: 10px;">
+            {% endif %}
+            <h3>{{ item.livre.titre }}</h3>
+            <p><strong>Auteur :</strong> {{ item.livre.auteur ? item.livre.auteur.prenom ~ ' ' ~ item.livre.auteur.nom : 'N/A' }}</p>
+            <p><strong>Catégorie :</strong> {{ item.livre.categorie ? item.livre.categorie.nom : 'N/A' }}</p>
+            <p><strong>Langue :</strong> {{ item.livre.langue ? item.livre.langue.nom : 'N/A' }}</p>
+            <p><strong>Description :</strong> {{ item.livre.description ?: 'N/A' }}</p>
+            <p><strong>Note Moyenne :</strong> {{ item.noteMoyenne is not null ? item.noteMoyenne ~ '/5' : 'Pas encore noté' }}</p>
+
+            <div id="details-{{ item.livre.id }}" style="display: none;">
+                <p><strong>ISBN :</strong> {{ item.livre.isbn ?: 'N/A' }}</p>
+                <p><strong>Pages :</strong> {{ item.livre.nombrePages ?: 'N/A' }}</p>
+                <p><strong>Année :</strong> {{ item.livre.anneePublication ?: 'N/A' }}</p>
+                <p><strong>Ajouté le :</strong> {{ item.livre.dateajout|date('d/m/Y') }}</p>
+            </div>
+
+            <button class="btn btn-sm btn-secondary mt-2" onclick="toggleDetails({{ item.livre.id }})" id="toggle-btn-{{ item.livre.id }}">Plus d'infos</button>
+
+            {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') and not is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_reservation_create', {'livreId': item.livre.id}) }}" class="btn btn-primary mt-2">Réserver</a>
+                <a href="{{ path('app_livre_commentaires', {'id': item.livre.id}) }}" class="btn btn-info mt-2">
+                    💬 Voir les commentaires
+                </a>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_livre_edit', {id: item.livre.id}) }}" class="btn btn-warning mt-2" style="background-color:rgb(186, 188, 119); color: white;">🖊️ Modifier</a><br>
+                <a href="{{ path('app_livre_delete', {id: item.livre.id}) }}" class="btn btn-danger mt-2" style="background-color:rgb(180, 103, 103); color: white;">🗑️ Supprimer</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucun livre trouvé.</p>
+    {% endfor %}
+</div>
+
+<script>
+    function toggleDetails(id) {
+        const details = document.getElementById('details-' + id);
+        const button = document.getElementById('toggle-btn-' + id);
+
+        if (details.style.display === 'none') {
+            details.style.display = 'block';
+            button.innerText = 'Moins d\'infos';
+        } else {
+            details.style.display = 'none';
+            button.innerText = 'Plus d\'infos';
+        }
+    }
+</script>

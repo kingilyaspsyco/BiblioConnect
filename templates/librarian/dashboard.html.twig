@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Bibliothécaire{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="text-center mb-4">
+            <h1 style="color:rgb(28, 79, 135);">📊 Dashboard Bibliothécaire</h1>
+            <p class="lead">Bienvenue sur votre tableau de bord</p>
+        </div>
+
+        <div class="card shadow-sm mb-5">
+            <div class="card-header" style="background-color:rgb(126, 164, 153); color: white;">
+                <h4>📚 Livres dans la bibliothèque</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Titre</th>
+                            <th>Auteur</th>
+                            <th>Catégorie</th>
+                            <th>Langue</th>
+                            <th>Disponible ?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for livre in livres %}
+                            <tr>
+                                <td><strong>{{ livre.titre }}</strong></td>
+                                <td>{{ livre.auteur ? livre.auteur.prenom ~ ' ' ~ livre.auteur.nom : 'N/A' }}</td>
+                                <td>{{ livre.categorie ? livre.categorie.nom : 'N/A' }}</td>
+                                <td>{{ livre.langue ? livre.langue.nom : 'N/A' }}</td>
+                                <td>
+                                    {% if livre.disponible %}
+                                        <span class="badge bg-success">✅ Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">❌ Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Aucun livre disponible.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-5">
+            <div class="card-header" style="background-color:rgb(107, 174, 194); color: white;">
+                <h4 >📅 Historique des Réservations</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Livre</th>
+                            <th>Date de réservation</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in reservations %}
+                            <tr>
+                                <td>{{ res.user.email }}</td>
+                                <td>{{ res.livre.titre }}</td>
+                                <td>{{ res.datereservation|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    {% if res.statut == 'en_attente' %}
+                                        <span class="badge bg-warning text-dark">⏳ En attente</span>
+                                    {% elseif res.statut == 'confirmee' %}
+                                        <span class="badge bg-success">✅ Confirmée</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">❔ Inconnue</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Aucune réservation trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary btn-lg">⬅️ Retour à l'accueil</a>
+        </div>
+    </div>
+    {% block stylesheets %}
+<style>
+    .table-hover tbody tr:hover {
+        background: linear-gradient(90deg, #f0f8ff 0%, #e0f7fa 100%) !important;
+        transition: background 0.5s ease;
+    }
+
+    .table-hover tbody tr {
+        transition: background 0.5s ease;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .badge {
+        font-size: 0.95rem;
+        padding: 0.5em 0.75em;
+        border-radius: 5px;
+    }
+
+    .badge.bg-success {
+        background-color: #388e3c;
+    }
+
+    .badge.bg-danger {
+        background-color: #d32f2f;
+    }
+
+    .badge.bg-warning {
+        background-color: #fbc02d;
+        color: #212121;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+
+{% endblock %}

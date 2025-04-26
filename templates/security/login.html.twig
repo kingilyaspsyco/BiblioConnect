@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<div class="container-fluid d-flex align-items-start justify-content-center bg-white py-5">
+    <div class="row w-100" style="max-width: 900px;">
+        <!-- Left Section -->
+        <div class="col-md-6 d-none d-md-flex bg-primary text-white flex-column justify-content-center align-items-center rounded-start position-relative">
+            <img src="{{ asset('images/biblio.png') }}" alt="Rocket Icon" class="position-absolute w-100 h-100" style="object-fit: cover;">
+        </div>
+
+        <!-- Right Section -->
+        <div class="col-md-6 bg-white p-5 rounded-end shadow-lg">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% else %}
+                <h2 class="h4 fw-bold text-center mb-4" style="color:rgb(52, 94, 94);">Connectez-vous</h2>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label fw-semibold" style="color:rgb(52, 94, 94);">Adresse email</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control rounded-3" placeholder="Entrez votre email" required autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputPassword" class="form-label fw-semibold" style="color:rgb(52, 94, 94);">Mot de passe</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control rounded-3" placeholder="Entrez votre mot de passe" required>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Remember me
+                        </label>
+                    </div>
+
+                    <button class="btn w-100 mb-3" type="submit" style="background-color:rgb(52, 94, 94); color: white;">Se connecter</button>
+                    <a href="{{ path('app_register') }}" class="btn w-100" style="border: 1px solid rgb(52, 94, 94); color: rgb(52, 94, 94);">Créer un compte</a>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

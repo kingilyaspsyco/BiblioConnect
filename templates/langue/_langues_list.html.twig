@@ -1,0 +1,30 @@
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for langue in langues %}
+        <div style="border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #f9f9f9; width: 280px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
+            <h3 style="color:rgb(28, 79, 135);">{{ langue.nom }}</h3>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_langues_edit', {id: langue.id}) }}" 
+                   class="btn btn-sm mt-2" 
+                   style="background-color:rgb(186, 188, 119); border: none; transition: 0.2s;">
+                   ✏️ Modifier
+                </a><br>
+                <a href="{{ path('app_langues_delete', {id: langue.id}) }}" 
+                   class="btn btn-sm mt-2" 
+                   style="background-color:rgb(180, 103, 103); border: none; transition: 0.2s;">
+                   🗑️ Supprimer
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucune langue trouvée.</p>
+    {% endfor %}
+</div>
+
+<style>
+    div[style*="border: 1px"]:hover {
+        transform: scale(1.03);
+    }
+    a.btn:hover {
+        opacity: 0.85;
+    }
+</style>

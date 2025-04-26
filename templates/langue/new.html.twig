@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Langue 🌍{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-success">➕ Nouvelle Langue</h1>
+
+        <div class="card shadow-sm p-4">
+            {{ form_start(form) }}
+                {{ form_widget(form, {'attr': {'class': 'mb-3'}}) }}
+                <button class="btn btn-primary mt-3">✅ Créer</button>
+            {{ form_end(form) }}
+        </div>
+
+        <a href="{{ app.request.headers.get('referer') ?: path('app_langues') }}" class="btn btn-secondary mt-3">⬅️ Retour</a>
+    </div>
+{% endblock %}

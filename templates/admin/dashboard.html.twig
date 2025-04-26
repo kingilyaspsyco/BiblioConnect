@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suivi des Stocks et Réservations{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-header {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .btn-view-comments {
+            font-size: 0.85rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-5 text-center">
+        📊 <strong>Suivi des Stocks et Réservations</strong>
+    </h1>
+
+    <div class="row g-4">
+        <!-- Livres Disponibles -->
+        <div class="col-md-6">
+            <div class="card border-success h-100">
+                <div class="card-header bg-success text-white">
+                    📚 Livres Disponibles ({{ livresDisponibles|length }})
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for livre in livresDisponibles %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ livre.titre }}</strong>
+                                <br><small class="text-muted">{{ livre.auteur.nom }}</small>
+                            </div>
+                                <a href="{{ path('admin_livre_commentaires', {'id': livre.id}) }}" class="btn btn-outline-secondary btn-sm btn-view-comments">💬 Voir commentaires</a>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-muted">Aucun livre disponible.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Livres Réservés -->
+        <div class="col-md-6">
+            <div class="card border-danger mb-4">
+                <div class="card-header bg-danger text-white">
+                    🔴 Livres Réservés ({{ livresReserves|length }})
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for livre in livresReserves %}
+                        {% set reservationConfirmee = livre.reservations|filter(r => r.statut == 'confirmee')|first %}
+                        {% if reservationConfirmee %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ livre.titre }}</strong>
+                                    <br><span class="badge bg-secondary">Réservé par {{ reservationConfirmee.user.firstname }}</span>
+                                </div>
+                                    <a href="{{ path('admin_livre_commentaires', {'id': livre.id}) }}" class="btn btn-outline-secondary btn-sm btn-view-comments">💬 Voir commentaires</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="list-group-item text-muted">Aucun livre réservé.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Réservations en Attente -->
+    <div class="card border-primary mb-4">
+        <div class="card-header bg-primary text-white">
+            ⏳ Réservations en Attente ({{ reservationsEnAttente|length }})
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for reservation in reservationsEnAttente %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        📖 <strong>{{ reservation.livre.titre }}</strong> - 
+                        <span class="badge bg-info text-dark">
+                            par {{ reservation.user.firstname }} le {{ reservation.datereservation|date('d/m/Y') }}
+                        </span>
+                    </div>
+                    <div>
+                        <a href="{{ path('admin_confirmer_reservation', { id: reservation.id }) }}" class="btn btn-success btn-sm me-2">✅ Confirmer</a>
+                        <a href="{{ path('admin_decliner_reservation', { id: reservation.id }) }}" class="btn btn-danger btn-sm">❌ Décliner</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">Aucune réservation en attente.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+{% endblock %}

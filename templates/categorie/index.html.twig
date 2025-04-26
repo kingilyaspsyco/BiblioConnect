@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Catégories 📂{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 style="color:rgb(28, 79, 135);">📂 Liste des Catégories</h1>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <input type="text" id="search" placeholder="🔍 Rechercher une catégorie..." class="form-control w-50" />
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('app_categories_new') }}" class="btn btn-success ms-3">➕ Ajouter une catégorie</a>
+            {% endif %}
+        </div>
+
+        <div id="categories-list">
+            {% include 'categorie/_categories_list.html.twig' with { categories: categories } %}
+        </div>
+
+        <a href="{{ path('app_home') }}" class="btn btn-secondary mt-4">⬅️ Retour à l'accueil</a>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search');
+        const categoriesList = document.getElementById('categories-list');
+
+        searchInput.addEventListener('input', function () {
+            fetch('{{ path('app_categories_search') }}?q=' + encodeURIComponent(this.value))
+                .then(response => response.text())
+                .then(html => {
+                    categoriesList.innerHTML = html;
+                });
+        });
+    </script>
+{% endblock %}
